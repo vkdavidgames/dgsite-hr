@@ -35,26 +35,26 @@
             bottom: 10px;
             left: 50%;
             transform: translateX(-100%);
-            width: 100px;
-            height: 100px;
+            width: 80px;  /* Smaller size */
+            height: 80px; /* Smaller size */
             background-color: purple;
         }
 
         .blue-circle {
             position: absolute;
-            bottom: 110px;
+            bottom: 90px;  /* Adjusted for new size */
             left: 50%;
-            transform: translateX(-80%); /* Adjusted value to move it closer to the cube */
-            width: 100px;
-            height: 100px;
+            transform: translateX(-70%); /* Adjusted value */
+            width: 80px;   /* Smaller size */
+            height: 80px;  /* Smaller size */
             background-color: blue;
             border-radius: 50%;
             animation: wobble 4s ease-in-out infinite;
         }
         
         @keyframes wobble {
-            0%, 100% { transform: translateX(-80%) translateY(0); }
-            50% { transform: translateX(-65%) translateY(-5px); } /* Adjusted translateX to increase the movement */
+            0%, 100% { transform: translateX(-70%) translateY(0); }
+            50% { transform: translateX(-60%) translateY(-4px); } /* Adjusted movement */
         }
 
         .orange-triangle {
@@ -63,9 +63,9 @@
             left: 50%;
             width: 0;
             height: 0;
-            border-left: 50px solid transparent;
-            border-right: 50px solid transparent;
-            border-bottom: 100px solid orange;
+            border-left: 40px solid transparent;  /* Smaller size */
+            border-right: 40px solid transparent; /* Smaller size */
+            border-bottom: 80px solid orange;      /* Smaller size */
         }
     </style>
 </head>
