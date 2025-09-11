@@ -44,7 +44,7 @@
             position: absolute;
             bottom: 110px;
             left: 50%;
-            transform: translateX(-100%);
+            transform: translateX(-80%); /* Adjusted value to move it closer to the cube */
             width: 100px;
             height: 100px;
             background-color: blue;
@@ -53,8 +53,8 @@
         }
         
         @keyframes wobble {
-            0%, 100% { transform: translateX(-100%) translateY(0); }
-            50% { transform: translateX(-95%) translateY(-5px); }
+            0%, 100% { transform: translateX(-80%) translateY(0); }
+            50% { transform: translateX(-65%) translateY(-5px); } /* Adjusted translateX to increase the movement */
         }
 
         .orange-triangle {
