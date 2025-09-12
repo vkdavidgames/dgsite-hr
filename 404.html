@@ -61,7 +61,7 @@
     #cheeseTrigger:hover {
       opacity: 1;
     }
-    #score {
+    #score, #highScore {
       display: none;
       font-size: 1.5em;
       margin-top: 10px;
@@ -82,8 +82,9 @@
   <!-- Hidden cheese trigger -->
   <div id="cheeseTrigger">🧀</div>
 
-  <!-- Cheese counter -->
+  <!-- Score and high score -->
   <div id="score">Cheese collected: 0 🧀</div>
+  <div id="highScore">High Score: 0 🧀</div>
   <div id="youDied">💀 You Died! 💀</div>
 
   <!-- Snake game -->
@@ -109,10 +110,13 @@
     const cheeseTrigger = document.getElementById("cheeseTrigger");
     const mobileControls = document.getElementById("mobileControls");
     const scoreDisplay = document.getElementById("score");
+    const highScoreDisplay = document.getElementById("highScore");
     const youDied = document.getElementById("youDied");
 
     let box = 15;
     let snake, direction, food, game, score;
+    let highScore = localStorage.getItem("ratHighScore") || 0;
+    highScoreDisplay.innerText = `High Score: ${highScore} 🧀`;
 
     function initGame() {
       snake = [{ x: 9 * box, y: 9 * box }];
@@ -120,13 +124,14 @@
       score = 0;
       scoreDisplay.innerText = "Cheese collected: 0 🧀";
       scoreDisplay.style.display = "block";
+      highScoreDisplay.style.display = "block";
       youDied.style.display = "none";
       food = {
         x: Math.floor(Math.random() * 19) * box,
         y: Math.floor(Math.random() * 19) * box
       };
       clearInterval(game);
-      game = setInterval(draw, 150); // slower speed
+      game = setInterval(draw, 150);
     }
 
     document.addEventListener("keydown", event => {
@@ -147,27 +152,32 @@
       ctx.fillStyle = "#fafafa";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw snake with directional rat emoji on head
-      ctx.font = "14px Arial";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
       for (let i = 0; i < snake.length; i++) {
-        let ratEmoji = "🐀"; // default body
-        if (i === 0) { // head shows direction
-          if (direction === "LEFT") ratEmoji = "⬅️🐀";
-          else if (direction === "UP") ratEmoji = "🐀⬆️";
-          else if (direction === "RIGHT") ratEmoji = "🐀➡️";
-          else if (direction === "DOWN") ratEmoji = "🐀⬇️";
+        if (i === 0) {
+          // Head rotation
+          ctx.save();
+          ctx.translate(snake[i].x + box/2, snake[i].y + box/2);
+          let angle = 0;
+          if (direction === "UP") angle = -Math.PI/2;
+          else if (direction === "DOWN") angle = Math.PI/2;
+          else if (direction === "LEFT") angle = Math.PI;
+          ctx.rotate(angle);
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("🐀", 0, 0);
+          ctx.restore();
+        } else {
+          // Body
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("🐀", snake[i].x + box/2, snake[i].y + box/2);
         }
-        ctx.fillText(ratEmoji, snake[i].x + box / 2, snake[i].y + box / 2);
       }
 
-      // Draw cheese as food
       ctx.fillText("🧀", food.x + box / 2, food.y + box / 2);
 
       let snakeX = snake[0].x;
       let snakeY = snake[0].y;
-
       if (direction === "LEFT") snakeX -= box;
       if (direction === "UP") snakeY -= box;
       if (direction === "RIGHT") snakeX += box;
@@ -176,16 +186,17 @@
       if (snakeX === food.x && snakeY === food.y) {
         score++;
         scoreDisplay.innerText = `Cheese collected: ${score} 🧀`;
-        food = {
-          x: Math.floor(Math.random() * 19) * box,
-          y: Math.floor(Math.random() * 19) * box
-        };
+        if (score > highScore) {
+          highScore = score;
+          highScoreDisplay.innerText = `High Score: ${highScore} 🧀`;
+          localStorage.setItem("ratHighScore", highScore);
+        }
+        food = { x: Math.floor(Math.random() * 19) * box, y: Math.floor(Math.random() * 19) * box };
       } else {
         snake.pop();
       }
 
       let newHead = { x: snakeX, y: snakeY };
-
       if (
         snakeX < 0 || snakeY < 0 ||
         snakeX >= canvas.width || snakeY >= canvas.height ||
