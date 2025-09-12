@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>404 - Lost in Cheese</title>
+  <style>
+    body {
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      background: #fffcf2;
+      color: #333;
+      text-align: center;
+      padding: 2em;
+    }
+    h1 {
+      font-size: 2.5em;
+      color: #f4a261;
+    }
+    p {
+      font-size: 1.2em;
+      margin-bottom: 2em;
+    }
+    a {
+      color: #2a9d8f;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    #gameCanvas {
+      display: none;
+      margin: 1em auto;
+      border: 3px solid #333;
+      background: #fafafa;
+    }
+    #cheese {
+      cursor: pointer;
+      font-size: 2em;
+      margin-top: 1em;
+    }
+    #controls {
+      display: none;
+      margin-top: 1em;
+    }
+    .btn {
+      background: #f4a261;
+      border: none;
+      padding: 1em;
+      font-size: 1.5em;
+      margin: 0.3em;
+      border-radius: 10px;
+      cursor: pointer;
+      color: #fff;
+    }
+    .btn:active {
+      background: #e76f51;
+    }
+    #controls-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      gap: 5px;
+      justify-content: center;
+      margin: auto;
+    }
+    #controls-grid .btn.empty {
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧀 404 - Lost in the Cheesiest Corner of the Internet 🐀</h1>
+  <p>You’ve taken a wrong turn in DavidGames’s cheesy maze.<br>
+  But don’t worry, there’s always more cheese to be found.</p>
+  <p><a href="/">➡ Return to safety (Home)</a></p>
+
+  <!-- Secret cheese button -->
+  <div id="cheese">🧀 Psst... click me for a cheesy surprise!</div>
+
+  <!-- Hidden Snake game -->
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+  <!-- On-screen controls (mobile) -->
+  <div id="controls">
+    <div id="controls-grid">
+      <button class="btn empty"></button>
+      <button class="btn" id="up">⬆️</button>
+      <button class="btn empty"></button>
+      <button class="btn" id="left">⬅️</button>
+      <button class="btn" id="down">⬇️</button>
+      <button class="btn" id="right">➡️</button>
+    </div>
+  </div>
+
+  <script>
+    const cheeseBtn = document.getElementById("cheese");
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const controls = document.getElementById("controls");
+
+    let box = 20;
+    let snake = [{ x: 9 * box, y: 10 * box }];
+    let direction;
+    let food = {
+      x: Math.floor(Math.random() * 19) * box,
+      y: Math.floor(Math.random() * 19) * box
+    };
+
+    document.addEventListener("keydown", setDir);
+
+    function setDir(e) {
+      if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+      else if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+      else if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+      else if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
+    }
+
+    // Mobile button controls
+    document.getElementById("up").addEventListener("click", () => {
+      if (direction !== "DOWN") direction = "UP";
+    });
+    document.getElementById("down").addEventListener("click", () => {
+      if (direction !== "UP") direction = "DOWN";
+    });
+    document.getElementById("left").addEventListener("click", () => {
+      if (direction !== "RIGHT") direction = "LEFT";
+    });
+    document.getElementById("right").addEventListener("click", () => {
+      if (direction !== "LEFT") direction = "RIGHT";
+    });
+
+    function draw() {
+      ctx.fillStyle = "#fafafa";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < snake.length; i++) {
+        ctx.fillStyle = i === 0 ? "#2a9d8f" : "#264653";
+        ctx.fillRect(snake[i].x, snake[i].y, box, box);
+      }
+
+      ctx.fillStyle = "#f4d35e"; // 🧀 cheese-colored food
+      ctx.fillRect(food.x, food.y, box, box);
+
+      let snakeX = snake[0].x;
+      let snakeY = snake[0].y;
+
+      if (direction === "LEFT") snakeX -= box;
+      if (direction === "UP") snakeY -= box;
+      if (direction === "RIGHT") snakeX += box;
+      if (direction === "DOWN") snakeY += box;
+
+      if (snakeX === food.x && snakeY === food.y) {
+        food = {
+          x: Math.floor(Math.random() * 19) * box,
+          y: Math.floor(Math.random() * 19) * box
+        };
+      } else {
+        snake.pop();
+      }
+
+      let newHead = { x: snakeX, y: snakeY };
+
+      if (
+        snakeX < 0 ||
+        snakeY < 0 ||
+        snakeX >= canvas.width ||
+        snakeY >= canvas.height ||
+        collision(newHead, snake)
+      ) {
+        clearInterval(game);
+        alert("🐀 You got lost in the cheesy maze!");
+      }
+
+      snake.unshift(newHead);
+    }
+
+    function collision(head, array) {
+      for (let i = 0; i < array.length; i++) {
+        if (head.x === array[i].x && head.y === array[i].y) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    let game;
+    cheeseBtn.addEventListener("click", () => {
+      cheeseBtn.style.display = "none";
+      canvas.style.display = "block";
+      controls.style.display = "block";
+      game = setInterval(draw, 120);
+    });
+  </script>
+</body>
+</html>
