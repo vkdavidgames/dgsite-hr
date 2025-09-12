@@ -50,7 +50,6 @@
       background: #eee;
       cursor: pointer;
     }
-    /* Hidden cheese trigger */
     #cheeseTrigger {
       position: fixed;
       bottom: 5px;
@@ -62,6 +61,17 @@
     #cheeseTrigger:hover {
       opacity: 1;
     }
+    #score {
+      display: none;
+      font-size: 1.5em;
+      margin-top: 10px;
+    }
+    #youDied {
+      display: none;
+      font-size: 2em;
+      color: red;
+      margin-top: 15px;
+    }
   </style>
 </head>
 <body>
@@ -71,6 +81,10 @@
 
   <!-- Hidden cheese trigger -->
   <div id="cheeseTrigger">🧀</div>
+
+  <!-- Cheese counter -->
+  <div id="score">Cheese collected: 0 🧀</div>
+  <div id="youDied">💀 You Died! 💀</div>
 
   <!-- Snake game -->
   <canvas id="gameCanvas" width="300" height="300"></canvas>
@@ -94,19 +108,25 @@
     const restartBtn = document.getElementById("restartBtn");
     const cheeseTrigger = document.getElementById("cheeseTrigger");
     const mobileControls = document.getElementById("mobileControls");
+    const scoreDisplay = document.getElementById("score");
+    const youDied = document.getElementById("youDied");
 
     let box = 15;
-    let snake, direction, food, game;
+    let snake, direction, food, game, score;
 
     function initGame() {
       snake = [{ x: 9 * box, y: 9 * box }];
       direction = null;
+      score = 0;
+      scoreDisplay.innerText = "Cheese collected: 0 🧀";
+      scoreDisplay.style.display = "block";
+      youDied.style.display = "none";
       food = {
         x: Math.floor(Math.random() * 19) * box,
         y: Math.floor(Math.random() * 19) * box
       };
       clearInterval(game);
-      game = setInterval(draw, 100);
+      game = setInterval(draw, 150); // slower speed
     }
 
     document.addEventListener("keydown", event => {
@@ -127,15 +147,16 @@
       ctx.fillStyle = "#fafafa";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      // Draw snake with rat emoji
+      ctx.font = "14px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
       for (let i = 0; i < snake.length; i++) {
-        ctx.fillStyle = i === 0 ? "green" : "lime";
-        ctx.fillRect(snake[i].x, snake[i].y, box, box);
-        ctx.strokeStyle = "white";
-        ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+        ctx.fillText("🐀", snake[i].x + box / 2, snake[i].y + box / 2);
       }
 
-      ctx.fillStyle = "red";
-      ctx.fillRect(food.x, food.y, box, box);
+      // Draw cheese as food
+      ctx.fillText("🧀", food.x + box / 2, food.y + box / 2);
 
       let snakeX = snake[0].x;
       let snakeY = snake[0].y;
@@ -146,6 +167,8 @@
       if (direction === "DOWN") snakeY += box;
 
       if (snakeX === food.x && snakeY === food.y) {
+        score++;
+        scoreDisplay.innerText = `Cheese collected: ${score} 🧀`;
         food = {
           x: Math.floor(Math.random() * 19) * box,
           y: Math.floor(Math.random() * 19) * box
@@ -162,6 +185,7 @@
         collision(newHead, snake)
       ) {
         clearInterval(game);
+        youDied.style.display = "block";
       }
 
       snake.unshift(newHead);
