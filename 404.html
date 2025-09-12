@@ -147,12 +147,19 @@
       ctx.fillStyle = "#fafafa";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw snake with rat emoji
+      // Draw snake with directional rat emoji on head
       ctx.font = "14px Arial";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       for (let i = 0; i < snake.length; i++) {
-        ctx.fillText("🐀", snake[i].x + box / 2, snake[i].y + box / 2);
+        let ratEmoji = "🐀"; // default body
+        if (i === 0) { // head shows direction
+          if (direction === "LEFT") ratEmoji = "⬅️🐀";
+          else if (direction === "UP") ratEmoji = "🐀⬆️";
+          else if (direction === "RIGHT") ratEmoji = "🐀➡️";
+          else if (direction === "DOWN") ratEmoji = "🐀⬇️";
+        }
+        ctx.fillText(ratEmoji, snake[i].x + box / 2, snake[i].y + box / 2);
       }
 
       // Draw cheese as food
