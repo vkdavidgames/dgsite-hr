@@ -2,142 +2,139 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>404 - Lost in Cheese</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Page Not Found</title>
   <style>
     body {
+      background: #fffae6;
       font-family: "Comic Sans MS", cursive, sans-serif;
-      background: #fffcf2;
-      color: #333;
       text-align: center;
-      padding: 2em;
+      color: #333;
+      margin: 0;
+      padding: 0;
     }
     h1 {
-      font-size: 2.5em;
-      color: #f4a261;
+      font-size: 4em;
+      margin-top: 2rem;
     }
     p {
-      font-size: 1.2em;
-      margin-bottom: 2em;
-    }
-    a {
-      color: #2a9d8f;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    a:hover {
-      text-decoration: underline;
+      font-size: 1.5em;
     }
     #gameCanvas {
       display: none;
-      margin: 1em auto;
+      margin: 20px auto;
       border: 3px solid #333;
       background: #fafafa;
     }
-    #cheese {
-      cursor: pointer;
-      font-size: 2em;
-      margin-top: 1em;
-    }
-    #controls {
+    #restartBtn {
       display: none;
-      margin-top: 1em;
-    }
-    .btn {
-      background: #f4a261;
+      margin: 10px auto;
+      padding: 10px 20px;
+      background: #ffcc00;
       border: none;
-      padding: 1em;
-      font-size: 1.5em;
-      margin: 0.3em;
-      border-radius: 10px;
+      border-radius: 8px;
+      font-size: 1em;
       cursor: pointer;
-      color: #fff;
     }
-    .btn:active {
-      background: #e76f51;
+    #mobileControls {
+      display: none;
+      margin-top: 10px;
     }
-    #controls-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 60px);
-      gap: 5px;
-      justify-content: center;
-      margin: auto;
+    #mobileControls button {
+      width: 60px;
+      height: 60px;
+      margin: 5px;
+      font-size: 1.5em;
+      border-radius: 50%;
+      border: 2px solid #333;
+      background: #eee;
+      cursor: pointer;
     }
-    #controls-grid .btn.empty {
-      visibility: hidden;
+    /* Hidden cheese trigger */
+    #cheeseTrigger {
+      position: fixed;
+      bottom: 5px;
+      right: 5px;
+      font-size: 1.2em;
+      cursor: pointer;
+      opacity: 0.3;
+    }
+    #cheeseTrigger:hover {
+      opacity: 1;
     }
   </style>
 </head>
 <body>
-  <h1>🧀 404 - Lost in the Cheesiest Corner of the Internet 🐀</h1>
-  <p>You’ve taken a wrong turn in DavidGames’s cheesy maze.<br>
-  But don’t worry, there’s always more cheese to be found.</p>
-  <p><a href="/">➡ Return to safety (Home)</a></p>
+  <h1>404</h1>
+  <p>Oops! You’ve reached the cheesiest corner of the internet. 🧀</p>
+  <p>Looks like this page ran away with the rats 🐀 or swam off with the fish 🐟.</p>
 
-  <!-- Secret cheese button -->
-  <div id="cheese">🧀 Psst... click me for a cheesy surprise!</div>
+  <!-- Hidden cheese trigger -->
+  <div id="cheeseTrigger">🧀</div>
 
-  <!-- Hidden Snake game -->
-  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <!-- Snake game -->
+  <canvas id="gameCanvas" width="300" height="300"></canvas>
+  <button id="restartBtn">Restart</button>
 
-  <!-- On-screen controls (mobile) -->
-  <div id="controls">
-    <div id="controls-grid">
-      <button class="btn empty"></button>
-      <button class="btn" id="up">⬆️</button>
-      <button class="btn empty"></button>
-      <button class="btn" id="left">⬅️</button>
-      <button class="btn" id="down">⬇️</button>
-      <button class="btn" id="right">➡️</button>
+  <!-- Mobile controls -->
+  <div id="mobileControls">
+    <div>
+      <button onclick="setDirection('UP')">⬆️</button>
+    </div>
+    <div>
+      <button onclick="setDirection('LEFT')">⬅️</button>
+      <button onclick="setDirection('DOWN')">⬇️</button>
+      <button onclick="setDirection('RIGHT')">➡️</button>
     </div>
   </div>
 
   <script>
-    const cheeseBtn = document.getElementById("cheese");
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
-    const controls = document.getElementById("controls");
+    const restartBtn = document.getElementById("restartBtn");
+    const cheeseTrigger = document.getElementById("cheeseTrigger");
+    const mobileControls = document.getElementById("mobileControls");
 
-    let box = 20;
-    let snake = [{ x: 9 * box, y: 10 * box }];
-    let direction;
-    let food = {
-      x: Math.floor(Math.random() * 19) * box,
-      y: Math.floor(Math.random() * 19) * box
-    };
+    let box = 15;
+    let snake, direction, food, game;
 
-    document.addEventListener("keydown", setDir);
-
-    function setDir(e) {
-      if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
-      else if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
-      else if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
-      else if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
+    function initGame() {
+      snake = [{ x: 9 * box, y: 9 * box }];
+      direction = null;
+      food = {
+        x: Math.floor(Math.random() * 19) * box,
+        y: Math.floor(Math.random() * 19) * box
+      };
+      clearInterval(game);
+      game = setInterval(draw, 100);
     }
 
-    // Mobile button controls
-    document.getElementById("up").addEventListener("click", () => {
-      if (direction !== "DOWN") direction = "UP";
+    document.addEventListener("keydown", event => {
+      if (event.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+      else if (event.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+      else if (event.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+      else if (event.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
     });
-    document.getElementById("down").addEventListener("click", () => {
-      if (direction !== "UP") direction = "DOWN";
-    });
-    document.getElementById("left").addEventListener("click", () => {
-      if (direction !== "RIGHT") direction = "LEFT";
-    });
-    document.getElementById("right").addEventListener("click", () => {
-      if (direction !== "LEFT") direction = "RIGHT";
-    });
+
+    function setDirection(dir) {
+      if (dir === "LEFT" && direction !== "RIGHT") direction = "LEFT";
+      else if (dir === "UP" && direction !== "DOWN") direction = "UP";
+      else if (dir === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
+      else if (dir === "DOWN" && direction !== "UP") direction = "DOWN";
+    }
 
     function draw() {
       ctx.fillStyle = "#fafafa";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       for (let i = 0; i < snake.length; i++) {
-        ctx.fillStyle = i === 0 ? "#2a9d8f" : "#264653";
+        ctx.fillStyle = i === 0 ? "green" : "lime";
         ctx.fillRect(snake[i].x, snake[i].y, box, box);
+        ctx.strokeStyle = "white";
+        ctx.strokeRect(snake[i].x, snake[i].y, box, box);
       }
 
-      ctx.fillStyle = "#f4d35e"; // 🧀 cheese-colored food
+      ctx.fillStyle = "red";
       ctx.fillRect(food.x, food.y, box, box);
 
       let snakeX = snake[0].x;
@@ -160,14 +157,11 @@
       let newHead = { x: snakeX, y: snakeY };
 
       if (
-        snakeX < 0 ||
-        snakeY < 0 ||
-        snakeX >= canvas.width ||
-        snakeY >= canvas.height ||
+        snakeX < 0 || snakeY < 0 ||
+        snakeX >= canvas.width || snakeY >= canvas.height ||
         collision(newHead, snake)
       ) {
         clearInterval(game);
-        alert("🐀 You got lost in the cheesy maze!");
       }
 
       snake.unshift(newHead);
@@ -175,20 +169,20 @@
 
     function collision(head, array) {
       for (let i = 0; i < array.length; i++) {
-        if (head.x === array[i].x && head.y === array[i].y) {
-          return true;
-        }
+        if (head.x === array[i].x && head.y === array[i].y) return true;
       }
       return false;
     }
 
-    let game;
-    cheeseBtn.addEventListener("click", () => {
-      cheeseBtn.style.display = "none";
+    restartBtn.onclick = initGame;
+
+    cheeseTrigger.onclick = () => {
       canvas.style.display = "block";
-      controls.style.display = "block";
-      game = setInterval(draw, 120);
-    });
+      restartBtn.style.display = "block";
+      mobileControls.style.display = "block";
+      cheeseTrigger.style.display = "none";
+      initGame();
+    };
   </script>
 </body>
 </html>
