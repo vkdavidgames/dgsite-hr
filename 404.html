@@ -71,6 +71,23 @@
       font-size: 2em;
       color: red;
       margin-top: 15px;
+      animation: pulse 1s infinite;
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.6; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    canvas.deathAnim {
+      animation: fadeOut 1s forwards;
+    }
+
+    @keyframes fadeOut {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.5); }
     }
   </style>
 </head>
@@ -132,7 +149,9 @@
       youDied.style.display = "none";
       food = randomFood();
       clearInterval(game);
-      game = setInterval(draw, 200); // slowed down
+      game = setInterval(draw, 150); // slowed down
+      canvas.style.opacity = 1; // reset in case of fade
+      canvas.style.transform = "scale(1)";
     }
 
     function randomFood() {
@@ -212,6 +231,10 @@
       ) {
         clearInterval(game);
         youDied.style.display = "block";
+        canvas.classList.add("deathAnim");
+        setTimeout(() => {
+          canvas.classList.remove("deathAnim");
+        }, 1000);
       }
 
       snake.unshift(newHead);
