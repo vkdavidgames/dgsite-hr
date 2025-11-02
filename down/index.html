@@ -8,7 +8,7 @@
         body {            
             background-color: #282c34;
             display: flex;
-            flex-direction: column; /* Changed to column to stack elements vertically */
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -17,13 +17,12 @@
         }
         h1 {
             color: white;
-           }
+        }
         .scene-container {
             position: relative;
             width: 500px;
             height: 300px;
         }
-
         .red-line {
             position: absolute;
             bottom: 0;
@@ -32,43 +31,55 @@
             height: 10px;
             background-color: red;
         }
-
         .purple-cube {
             position: absolute;
             bottom: 10px;
             left: 50%;
             transform: translateX(-100%);
-            width: 80px;  /* Smaller size */
-            height: 80px; /* Smaller size */
+            width: 80px;
+            height: 80px;
             background-color: purple;
         }
-
         .blue-circle {
             position: absolute;
-            bottom: 90px;  /* Adjusted for new size */
+            bottom: 90px;
             left: 50%;
-            transform: translateX(-70%); /* Adjusted value */
-            width: 80px;   /* Smaller size */
-            height: 80px;  /* Smaller size */
+            transform: translateX(-70%);
+            width: 80px;
+            height: 80px;
             background-color: blue;
             border-radius: 50%;
             animation: wobble 4s ease-in-out infinite;
         }
-        
         @keyframes wobble {
             0%, 100% { transform: translateX(-70%) translateY(0); }
-            50% { transform: translateX(-60%) translateY(-4px); } /* Adjusted movement */
+            50% { transform: translateX(-60%) translateY(-4px); }
         }
-
         .orange-triangle {
             position: absolute;
             bottom: 10px;
             left: 50%;
             width: 0;
             height: 0;
-            border-left: 40px solid transparent;  /* Smaller size */
-            border-right: 40px solid transparent; /* Smaller size */
-            border-bottom: 80px solid orange;      /* Smaller size */
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 80px solid orange;
+        }
+        /* ---- beta-button styling ---- */
+        #betaBtn {
+            margin-top: 2rem;
+            padding: .6em 1.2em;
+            font-size: 1.1rem;
+            background: #61dafb;
+            color: #282c34;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        #betaBtn:disabled {
+            background: #888;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -80,5 +91,27 @@
         <div class="orange-triangle"></div>
         <div class="blue-circle"></div>
     </div>
+
+    <!-- Beta-site launcher -->
+    <button id="betaBtn" onclick="countdown()">Try our beta site</button>
+    <script>
+        function countdown(){
+            const btn = document.getElementById('betaBtn');
+            let t = 3;
+            btn.disabled = true;
+            btn.textContent = `Redirecting in ${t}`;
+            const id = setInterval(() => {
+                if (--t > 0) {
+                    btn.textContent = `Redirecting in ${t}`;
+                } else {
+                    clearInterval(id);
+                    btn.textContent = 'Good luck';
+                    setTimeout(() => {
+                        location.href = 'https://davidgames.uk/hell.html';
+                    }, 500);
+                }
+            }, 1000);
+        }
+    </script>
 </body>
 </html>
