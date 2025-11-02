@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="xx-bork">
+<head>
+<meta charset="utf-8">
+<title>The Most Inconvenient Website</title>
+<style>
+  /* 1. Randomized z-index chaos on scroll */
+  *{box-sizing:border-box;transition:all .3s}
+  body{margin:0;font-family:"Comic Sans MS",cursive;background:#000;color:#fff;overflow-x:hidden}
+  .z Chaos{position:relative}
+  /* 2. Font-size strobes if no light sensor */
+  @media (prefers-color-scheme: light){
+    body{animation:strobe 0.07s infinite}
+    @keyframes strobe{0%{font-size:6px}50%{font-size:240px}100%{font-size:6px}}
+  }
+  /* 3. Line-height nightmare */
+  p{line-height:0.7em;letter-spacing:calc(sin(3.14)*4px)}
+  /* 4. Invisible white-on-white button that drifts */
+  #accept{
+    position:absolute;
+    color:#fff;
+    background:#fff;
+    border:1px solid #fff;
+    padding:6px 14px;
+    animation:drift 3s linear infinite;
+    cursor:none;
+  }
+  @keyframes drift{0%{left:0}100%{left:calc(100vw - 100px)}}
+  /* 5. Pop-up cascade starter */
+  .popup{
+    width:200px;height:200px;border:2px solid #0f0;
+    position:fixed;top:0;left:0;background:#000;color:#0f0;
+    overflow:hidden;resize:none;
+  }
+  /* 6. Search box hidden inside audio transcript */
+  audio{position:absolute;left:-9999px}
+  #transcript{position:absolute;top:-9999px}
+  /* 7. Vertical pagination: each para is 10000px tall */
+  .page{height:10000px}
+  /* 8. Credit-card digit shuffle */
+  #card{letter-spacing:8px;font-family:monospace}
+</style>
+</head>
+<body>
+<h1 style="transform:rotate(-3deg)">Welcome, victim.</h1>
+
+<!-- 1. QR farce replaced by instant CAPTCHA -->
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==" width="1" height="1" alt="QR code placeholder">
+<script>
+  (function(){
+    const t=5,txt='TYPE ȦBCD123';let c=prompt('CAPTCHA: '+txt+' (you have '+t+'s)');
+    let ok=c===txt; if(!ok){alert('Wrong');window.location='about:blank';}
+  })();
+</script>
+
+<!-- 2. White-on-white drifting Accept -->
+<div id="accept">Accept</div>
+
+<!-- 3. TOS PDF fake -->
+<a id="tos" href="data:application/pdf;base64,JVBERi0xLjQKJcOkw7zDtsO8CjIgMCBvYmoKPDwKL0xlbmd0aCAzIDAgUgovRmlsdGVyIC9GbGF0ZURlY29kZQo+PgpzdHJlYW0KeJzLSMxLLUmNzNFLzs8rzi9KycxLt4IDAIvJBw4KZW5kc3RyZWFtCmVuZG9iago=" download>Download 2 MB TOS</a>
+
+<!-- 4. Username / Password hell -->
+<form id="auth" onsubmit="return false">
+  <label>Username (needs Egyptian hieroglyph, prime >997, no consecutive vowels)</label><br>
+  <input id="user" required><br>
+  <label>Password (no rules yet, good luck)</label><br>
+  <input id="pass" type="password" required><br>
+  <button onclick="check()">Login</button>
+</form>
+<script>
+function check(){
+  const u=document.getElementById('user').value;
+  if(!/𓂀/.test(u)){alert('Missing hieroglyph');return;}
+  if(!/(1009|1013|1019|1021)/.test(u)){alert('Prime >997 missing');return;}
+  if(/[AEIOUaeiou]{2}/.test(u)){alert('Consecutive vowels!');return;}
+  alert('Session expires in 45s');
+  let s=45; const x=setInterval(()=>{
+    document.title='Expire in '+(s--)+'s';
+    if(s<0){clearInterval(x);alert('Expired');location.reload();}
+  },1000);
+}
+</script>
+
+<!-- 5. Pop-up cascade -->
+<button onclick="pop()">Open menu</button>
+<script>
+function pop(){
+  let left=0,top=0;
+  for(let i=0;i<12;i++){
+    const w=open('','','width=200,height=200,left='+left+',top='+top);
+    w.document.write('<body style="margin:0;background:#000;color:#0f0">Popup #'+(i+1)+'</body>');
+    left+=30;top+=30;
+  }
+}
+</script>
+
+<!-- 6. Search inside audio transcript -->
+<audio controls>
+  <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
+  <track kind="captions" src="#transcript">
+</audio>
+<span id="transcript"><input placeholder="Search here (good luck)" onkeyup="search(this.value)"></span>
+<script>
+function search(v){
+  if(v==='doom') alert('Result: MIDI file');
+}
+</script>
+
+<!-- 7. Vertical pagination demo -->
+<div class="page"><h2>Page 1</h2><p>Scroll 10 000 px for next paragraph…</p></div>
+<div class="page"><h2>Page 2</h2><p>Still here? You love pain.</p></div>
+
+<!-- 8. Credit-card shuffle form -->
+<h2>Checkout</h2>
+<label>Card number (digits reshuffle on input)</label><br>
+<input id="card" maxlength="19" oninput="shuffle4(this)">
+<script>
+function shuffle4(el){
+  const v=el.value.replace(/\D/g,'');
+  if(v.length<4)return;
+  const a=v.split(''),p=Math.floor(Math.random()*4);
+  [a[0],a[p]]=[a[p],a[0]];
+  el.value=a.join('')+' ';
+}
+</script>
+
+<!-- 9. Exit trap -->
+<script>
+window.onbeforeunload=()=>"Are you sure you want to leave?";
+</script>
+
+<!-- 10. Memory-leak roulette -->
+<script>
+let n=1;
+setInterval(()=>{
+  const b=document.createElement('div');
+  b.style.height='1px';
+  b.textContent=' '.repeat(1e6);
+  document.body.appendChild(b);
+  console.clear();               // wipe console
+},n*=2);
+</script>
+</body>
+</html>
