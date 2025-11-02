@@ -8,7 +8,7 @@
         body {            
             background-color: #282c34;
             display: flex;
-            flex-direction: column;
+            flex-direction: column; /* Changed to column to stack elements vertically */
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -17,12 +17,13 @@
         }
         h1 {
             color: white;
-        }
+           }
         .scene-container {
             position: relative;
             width: 500px;
             height: 300px;
         }
+
         .red-line {
             position: absolute;
             bottom: 0;
@@ -31,41 +32,45 @@
             height: 10px;
             background-color: red;
         }
+
         .purple-cube {
             position: absolute;
             bottom: 10px;
             left: 50%;
             transform: translateX(-100%);
-            width: 80px;
-            height: 80px;
+            width: 80px;  /* Smaller size */
+            height: 80px; /* Smaller size */
             background-color: purple;
         }
+
         .blue-circle {
             position: absolute;
-            bottom: 90px;
+            bottom: 90px;  /* Adjusted for new size */
             left: 50%;
-            transform: translateX(-70%);
-            width: 80px;
-            height: 80px;
+            transform: translateX(-70%); /* Adjusted value */
+            width: 80px;   /* Smaller size */
+            height: 80px;  /* Smaller size */
             background-color: blue;
             border-radius: 50%;
             animation: wobble 4s ease-in-out infinite;
         }
+        
         @keyframes wobble {
             0%, 100% { transform: translateX(-70%) translateY(0); }
-            50% { transform: translateX(-60%) translateY(-4px); }
+            50% { transform: translateX(-60%) translateY(-4px); } /* Adjusted movement */
         }
+
         .orange-triangle {
             position: absolute;
             bottom: 10px;
             left: 50%;
             width: 0;
             height: 0;
-            border-left: 40px solid transparent;
-            border-right: 40px solid transparent;
-            border-bottom: 80px solid orange;
+            border-left: 40px solid transparent;  /* Smaller size */
+            border-right: 40px solid transparent; /* Smaller size */
+            border-bottom: 80px solid orange;      /* Smaller size */
         }
-        /* ---- beta-button styling ---- */
+/* ---- beta-button styling ---- */
         #betaBtn {
             margin-top: 2rem;
             padding: .6em 1.2em;
@@ -114,4 +119,4 @@
         }
     </script>
 </body>
-</html>
+</htmbeta-buttonta-button
