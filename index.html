@@ -70,6 +70,22 @@
             border-right: 40px solid transparent; /* Smaller size */
             border-bottom: 80px solid orange;      /* Smaller size */
         }
+/* ---- beta-button styling ---- */
+        #betaBtn {
+            margin-top: 2rem;
+            padding: .6em 1.2em;
+            font-size: 1.1rem;
+            background: #61dafb;
+            color: #282c34;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        #betaBtn:disabled {
+            background: #888;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -80,5 +96,27 @@
         <div class="orange-triangle"></div>
         <div class="blue-circle"></div>
     </div>
+
+    <!-- Beta-site launcher -->
+    <button id="betaBtn" onclick="countdown()">Try our beta site</button>
+    <script>
+        function countdown(){
+            const btn = document.getElementById('betaBtn');
+            let t = 3;
+            btn.disabled = true;
+            btn.textContent = `Redirecting in ${t}`;
+            const id = setInterval(() => {
+                if (--t > 0) {
+                    btn.textContent = `Redirecting in ${t}`;
+                } else {
+                    clearInterval(id);
+                    btn.textContent = 'Good luck';
+                    setTimeout(() => {
+                        location.href = 'https://davidgames.uk/hell.html';
+                    }, 500);
+                }
+            }, 1000);
+        }
+    </script>
 </body>
-</html>
+</htmbeta-buttonta-button
